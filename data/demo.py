@@ -1,4 +1,4 @@
-"""Fiktive Werte; keine NASA-Messdaten oder medizinischen Referenzwerte."""
+"""Fictional values; no NASA measurements or medical reference values."""
 
 from random import Random
 from typing import Protocol
@@ -6,32 +6,32 @@ from typing import Protocol
 import pandas as pd
 
 
-SCENARIOS = ("Normaler Missionsverlauf", "Auffälliger Missionsverlauf")
-# Schlüssel: (Anzeigename, Einheit, frei gewählte Demo-Baseline)
+SCENARIOS = ("Normal mission scenario", "Anomalous mission scenario")
+# Key: (display name, unit, arbitrary demo baseline)
 METRICS = {
-    "resting_heart_rate": ("Ruheherzfrequenz", "bpm", 60.0),
-    "sleep_hours": ("Schlafdauer", "h", 8.0),
-    "activity_minutes": ("Aktivität", "min/Tag", 60.0),
+    "resting_heart_rate": ("Resting heart rate", "bpm", 60.0),
+    "sleep_hours": ("Sleep duration", "h", 8.0),
+    "activity_minutes": ("Activity", "min/day", 60.0),
 }
 
 
 class VitalDataSource(Protocol):
-    """Adaptervertrag: 30 Tageszeilen, mission_day und METRICS-Spalten.
+    """Adapter contract: 30 daily rows, mission_day and METRICS columns.
 
-    Werte müssen endlich, numerisch und in den oben definierten Einheiten
-    vorliegen. Ein künftiger Adapter muss Herkunft, Einheiten, Fehlwerte und
-    geeignete Baselines explizit klären; hier ist keine NASA-Quelle angebunden.
+    Values must be finite, numeric and use the units defined above.
+    A future adapter must explicitly address provenance, units, missing values
+    and suitable baselines; no NASA data source is connected here.
     """
 
     def load(self, scenario: str) -> pd.DataFrame: ...
 
 
 class SyntheticDataSource:
-    """Deterministische Demo mit lokalem Zufallsgenerator, Seed 2026."""
+    """Deterministic demo using a local random generator, seed 2026."""
 
     def load(self, scenario: str) -> pd.DataFrame:
         if scenario not in SCENARIOS:
-            raise ValueError(f"Unbekanntes Szenario: {scenario}")
+            raise ValueError(f"Unknown scenario: {scenario}")
         rng = Random(2026)
         rows = []
         for day in range(1, 31):

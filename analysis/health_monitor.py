@@ -3,7 +3,7 @@ def calculate_deviation(
     current: float
 ) -> float:
     if baseline == 0:
-        raise ValueError("Baseline darf nicht 0 sein.")
+        raise ValueError("Baseline must not be zero.")
 
     deviation = ((current - baseline) / baseline) * 100
     return deviation
@@ -12,7 +12,7 @@ def calculate_deviation(
 def classify_health_status(deviation: float) -> str:
 
     if deviation < 0:
-        raise ValueError("Deviation darf nicht negativ sein.")
+        raise ValueError("Deviation must not be negative.")
 
     if deviation < 10.0:
         return "NORMAL"
@@ -33,7 +33,7 @@ def analyze_heart_rate(
         current
     )
 
-    # Bestimme den Status mit dem Betrag
+    # Classify the absolute deviation
     status = classify_health_status(abs(deviation))
 
     return {

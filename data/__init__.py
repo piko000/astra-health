@@ -1,1 +1,1 @@
-"""Austauschbare Datenquellen für die lokale Demo."""
+"""Interchangeable data sources for the local demo."""

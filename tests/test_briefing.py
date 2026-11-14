@@ -20,7 +20,7 @@ def test_briefing_explains_existing_boundaries_in_both_directions(deviation, sta
     assert RULE_TEXT[status] in briefing["explanations"][0]
     assert f"{deviation:+.2f} %" in briefing["explanations"][0]
     assert "Baseline 60 bpm" in briefing["explanations"][0]
-    assert briefing["affected"] == ([] if status == "NORMAL" else ["Ruheherzfrequenz"])
+    assert briefing["affected"] == ([] if status == "NORMAL" else ["Resting heart rate"])
     assert briefing["next_step"]
 
 
@@ -29,7 +29,7 @@ def test_artificial_change_marker_is_explicit_and_optional(key):
     frame = SyntheticDataSource().load(SCENARIOS[1])
     fig = vital_chart(frame, key, 16, change_day=16)
     assert fig.layout.shapes[2].x0 == 16
-    assert any("Tag 16: künstliche Veränderung" in a.text for a in fig.layout.annotations)
+    assert any("Day 16: artificial change" in a.text for a in fig.layout.annotations)
     assert len(vital_chart(frame, key, 16).layout.shapes) == 2
 
 
@@ -48,8 +48,8 @@ def test_mission_warning_card_and_briefing(scenario, day, status):
     alerts = {"NORMAL": app.success, "WARNING": app.warning, "CRITICAL": app.error}
     assert len(alerts[status]) == 1
     card = alerts[status][0].value
-    assert f"Demo-Gesamtstatus: {status} · Tag {day}" in card
-    assert "keine Diagnose" in card
+    assert f"Overall demo status: {status} · Day {day}" in card
+    assert "not a diagnosis" in card
     assert len(app.metric) == 3
     assert [tab.label for tab in app.tabs] == [label for label, _, _ in METRICS.values()]
     summary = summarize_day(SyntheticDataSource().load(scenario), day)
@@ -61,6 +61,6 @@ def test_mission_warning_card_and_briefing(scenario, day, status):
         assert explanation in markdown
     assert expected["next_step"] in markdown
     if scenario == SCENARIOS[1]:
-        assert any("Tag 16 markiert" in c.value for c in app.caption)
+        assert any("Day 16 marks" in c.value for c in app.caption)
     else:
-        assert not any("Tag 16 markiert" in c.value for c in app.caption)
+        assert not any("Day 16 marks" in c.value for c in app.caption)

@@ -1,4 +1,4 @@
-"""Deterministische Erklärung vorhandener Statuswerte; keine neue Diagnose-Logik."""
+"""Deterministic explanation of existing statuses; no new diagnostic logic."""
 
 import pandas as pd
 
@@ -9,14 +9,14 @@ RULE_TEXT = {
     "CRITICAL": "|d| ≥ 25 %",
 }
 NEXT_STEP = {
-    "NORMAL": "Verlauf weiter ansehen; NORMAL bedeutet nur, dass keine Demo-Grenze erreicht ist.",
-    "WARNING": "Wert, Baseline und Erfassungskontext prüfen; den Verlauf mit benachbarten Tagen vergleichen.",
-    "CRITICAL": "Wert und Baseline zuerst verifizieren; bei realen Daten wäre eine fachliche Beurteilung nötig.",
+    "NORMAL": "Continue reviewing the trend; NORMAL only means that no demo threshold has been reached.",
+    "WARNING": "Check the value, baseline and measurement context; compare with adjacent days.",
+    "CRITICAL": "Verify the value and baseline first; real data would require professional assessment.",
 }
 
 
 def mission_briefing(summary: pd.DataFrame) -> dict:
-    """Übernimmt die Klassifikation aus summarize_day, statt sie neu zu berechnen."""
+    """Uses the classification from summarize_day without recalculating it."""
     statuses = set(summary["Status"])
     status = "CRITICAL" if "CRITICAL" in statuses else "WARNING" if "WARNING" in statuses else "NORMAL"
     affected = summary.loc[summary["Status"] != "NORMAL"]
@@ -24,16 +24,16 @@ def mission_briefing(summary: pd.DataFrame) -> dict:
     explanations = []
     for _, row in rows.iterrows():
         explanations.append(
-            f'**{row["Vitalwert"]} · {row["Status"]}**\n\n'
-            f'Synthetischer Wert {row["Aktuell"]:.2f} {row["Einheit"]}; '
-            f'Baseline {row["Baseline"]:g} {row["Einheit"]}. '
-            f'Abweichung {row["Abweichung (%)"]:+.2f} % '
-            f'(Betrag {row["Betrag (%)"]:.2f} %). '
-            f'Demo-Regel: {RULE_TEXT[row["Status"]]}.'
+            f'**{row["Indicator"]} · {row["Status"]}**\n\n'
+            f'Synthetic value {row["Current"]:.2f} {row["Unit"]}; '
+            f'Baseline {row["Baseline"]:g} {row["Unit"]}. '
+            f'Deviation {row["Deviation (%)"]:+.2f} % '
+            f'(Magnitude {row["Magnitude (%)"]:.2f} %). '
+            f'Demo rule: {RULE_TEXT[row["Status"]]}.'
         )
     return {
         "status": status,
-        "affected": affected["Vitalwert"].tolist(),
+        "affected": affected["Indicator"].tolist(),
         "explanations": explanations,
         "next_step": NEXT_STEP[status],
     }

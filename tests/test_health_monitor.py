@@ -43,5 +43,5 @@ def test_critical_status1():
     assert classify_health_status(25.0) == "CRITICAL"
 
 def test_value_error_status():
-    with pytest.raises(ValueError, match="Deviation darf nicht negativ sein."):
+    with pytest.raises(ValueError, match="Deviation must not be negative."):
         classify_health_status(-5.0)
