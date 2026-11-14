@@ -22,12 +22,16 @@ def summarize_day(frame: pd.DataFrame, day: int) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def vital_chart(frame: pd.DataFrame, key: str, day: int):
+def vital_chart(frame: pd.DataFrame, key: str, day: int, *, change_day: int | None = None):
     label, unit, baseline = METRICS[key]
     fig = px.line(frame, x="mission_day", y=key, markers=True,
                   labels={"mission_day": "Missionstag", key: f"{label} ({unit})"})
     fig.update_traces(line_color="#38bdf8")
     fig.add_hline(y=baseline, line_dash="dash", annotation_text="Demo-Baseline")
     fig.add_vline(x=day, line_dash="dot", line_color="#f59e0b")
-    fig.update_layout(height=300, margin=dict(l=10, r=10, t=30, b=10))
+    if change_day is not None:
+        fig.add_vline(x=change_day, line_dash="dashdot", line_color="#e879f9",
+                      annotation_text=f"Tag {change_day}: künstliche Veränderung",
+                      annotation_position="top left")
+    fig.update_layout(height=360, margin=dict(l=10, r=10, t=40, b=10))
     return fig

@@ -28,7 +28,7 @@ Tagesauswertung bezieht sich auf den ausgewählten Tag.
 - `analysis/dashboard.py`: verbindet Daten mit den bestehenden Funktionen und
   erstellt Plotly-Diagramme. Keine neue fachliche Klassifikationslogik.
 - `analysis/health_monitor.py`: bestehende Analyse unverändert. Auch der vorhandene
-  Beispielcode bleibt erhalten und schreibt beim Import zwei Zeilen ins Terminal.
+  Beispielcode bleibt erhalten und schreibt beim Import ins Terminal.
 - `tests/`: bestehende Tests sowie neue Daten-, Diagramm- und Streamlit-AppTests.
 
 Die frei gewählten Baselines sind 60 bpm Ruheherzfrequenz, 8 Stunden Schlaf und
@@ -79,3 +79,108 @@ Testergebnis am 14.11.2026 unter Python 3.13.16 mit den Versionen aus
 `requirements.txt`: **20 passed in 4.81s** (12 bestehende und 8 neue Tests).
 Die ursprünglichen Tests bestanden auch vor den Änderungen (12 passed);
 dabei entstand lediglich eine Warnung wegen des nicht beschreibbaren pytest-Caches.
+
+## M4: Wissenschaftliche Grundlage
+
+In der Seitenleiste unter **Ansicht → NASA-Forschung** stehen die recherchierten
+Quellen, Kandidaten und Einschränkungen. Die Ansicht liest lokal
+[`docs/RESEARCH_SOURCES.md`](docs/RESEARCH_SOURCES.md); sie benötigt keine
+Netzwerkverbindung. Externe Links benötigen zum Öffnen Internet. Bei einer
+fehlenden oder unlesbaren Dokumentation zeigt sie einen Hinweis; die Demo bleibt
+nutzbar. Neue Abhängigkeiten oder Modelle wurden nicht ergänzt.
+
+Das [NASA Human Research Program](https://www.nasa.gov/hrp/) liefert den
+Forschungskontext. Der [NASA-Konferenzbeitrag NTRS 20220014774](https://ntrs.nasa.gov/citations/20220014774)
+belegt die Relevanz von Erhebungsintervallen bei Schlafmessungen. Diese Quellen
+validieren weder unsere Warnregeln noch unsere synthetischen Missionsverläufe.
+
+### Datensatzherkunft und synthetische Kennzeichnung
+
+Es wurden **keine echten Messdaten importiert**. Alle drei Vitalwertkurven stammen
+unverändert aus `SyntheticDataSource` und sind als synthetisch gekennzeichnet.
+Die NASA-Integration besteht aus einer belegten Informationsansicht.
+Recherchiert wurden HRP, OSDR, NLSP und die offizielle Challenge-Seite. Das Dossier
+führt konkrete UTMB-, OSDR- und Schlafdatenkandidaten einschließlich Population,
+Zugangsstand, ungeklärten Formaten/Nutzungsrechten und Eignungsentscheidung auf.
+
+### Medizinische und technische Grenzen
+
+Kein direkt nutzbarer, vollständig verifizierter Datensatz für die vorhandene
+Tagesauswertung wurde gefunden. Einige Portalansichten waren im Recherchewerkzeug
+nicht lesbar; die Challenge-Seite lieferte beim direkten Abruf HTTP 502. Das ist
+kein Nachweis, dass passende NASA-Daten grundsätzlich nicht verfügbar sind.
+Spitzen- oder Belastungsherzfrequenz sowie Tierdaten dürfen nicht als menschliche
+Ruheherzfrequenz verwendet werden. Forschungsergebnisse sind keine individuellen
+Missionskurven. Demo-Baselines und 10-/25-Prozent-Schwellen bleiben unverändert
+und medizinisch unvalidiert; es gibt keine Diagnose- oder NASA-Zertifizierung.
+
+Für die Hackathon-Abgabe empfehlen wir die Bezeichnung „Prototyp mit synthetischen
+Vitaldaten und belegtem NASA-Forschungskontext“. Eine echte Datenintegration bleibt
+ein nächster Schritt nach Quellen-, Rechte- und Protokollprüfung.
+
+### M4-Testresultat (14.11.2026)
+
+`python -m pytest -q -p no:cacheprovider`: **23 passed in 3.74s**.
+Alle bisherigen 20 Tests sind erhalten; drei neue Testfälle prüfen die getrennte
+Forschungsansicht, die Rückkehr zur Demo sowie fehlende/unlesbare Dokumentation.
+Ein erster Lauf ergab 22 bestandene Tests und einen Vergleichsfehler wegen des
+von Streamlit entfernten abschließenden Zeilenumbruchs; der neue Test normalisiert
+nun äußere Leerzeichen. Der abschließende vollständige Lauf ist erfolgreich.
+Prüfsummen vor/nach M4 bestätigen unveränderte Analyse-, Demo- und bisherige
+Testdateien. Externe Erreichbarkeit wird nicht durch automatisierte Tests geprüft;
+ein visueller Browsertest wurde nicht durchgeführt.
+
+## M4: Kompakte Demo und Mission Health Briefing
+
+Oben stehen die Gesamtstatus-/Warnkarte und drei Vitalwert-Karten. Darunter zeigt
+der erste Tab die Ruheherzfrequenz als großes Hauptdiagramm; Schlaf und Aktivität
+sind in benachbarten Tabs erreichbar. Das Briefing steht daneben. Formel und
+Datentabelle sind einklappbar. Auf schmalen Bildschirmen kann Scrollen nötig sein.
+
+`analysis/briefing.py` erklärt die von der bestehenden Analyse gelieferten
+Statuswerte mit festen Textvorlagen: betroffene Indikatoren, synthetische Werte,
+Baseline, vorzeichenbehaftete Abweichung, Betrag, Regel und nächster Prüfschritt.
+Bei NORMAL werden alle drei Indikatoren erklärt; sonst nur auffällige. Der
+Gesamtstatus bleibt die höchste Einzelstufe. Keine neue klinische Regel.
+
+Im auffälligen Szenario markiert jedes Diagramm **Tag 16** als Beginn der
+programmierten Veränderung. Dieser Zeitpunkt ist weder eine erkannte Diagnose
+noch zwingend der erste Warnungstag. Der normale Verlauf erhält keine solche
+Markierung. Beide Szenarien und der Seed bleiben unverändert.
+
+Unter **NASA-Forschung → Space Health Research** steht eine kurze belegte
+Einordnung; das vollständige Quellen-Dossier ist einklappbar. Synthetische Daten,
+Forschungsbelege und Demo-Regeln bleiben getrennt beschriftet. Der erneute Abruf
+der offiziellen Challenge-/Resources-Seite scheiterte; die vollständige Prüfung
+dieses Reiters bleibt offen. Die Informationsansicht funktioniert lokal offline.
+
+### KI-Transparenz
+
+Codex unterstützte Implementierung, Recherche, Dokumentation und Tests. Die
+Anwendung selbst verwendet kein KI-Modell und keinen kostenpflichtigen Dienst.
+Details und Grenzen stehen in [docs/AI_USAGE.md](docs/AI_USAGE.md).
+
+### Kurzer Demo-Ablauf
+
+1. Normaler Verlauf, Tag 30: NORMAL und die drei Kennzahlen erklären.
+2. Auffälliger Verlauf, Tag 16: künstlichen Änderungsbeginn zeigen.
+3. Tag 22: WARNING-Karte, betroffene Kennzahlen und Briefing erläutern.
+4. Tag 30: CRITICAL als Demo-Stufe zeigen, keine Diagnose behaupten.
+5. Space Health Research öffnen und Quellen sowie KI-Nutzung offenlegen.
+
+### Prüfung der Dashboard-Überarbeitung (14.11.2026)
+
+- Ausgangsstand: 23 Tests bestanden.
+- Szenarien-/Briefingtests: `python -m pytest tests/test_briefing.py -q -p no:cacheprovider`
+  → **14 passed in 4.01s**.
+- Anschließend vollständige Testsuite: `python -m pytest -q -p no:cacheprovider`
+  → **37 passed in 5.87s**. Alle bisherigen Tests sind unverändert erhalten.
+- Geprüft: Warnkarten, angezeigte Erklärungen, beide Szenarien, Tage 15/16/22/30,
+  positive und negative Grenzfälle, Diagramm-Tabs und optionale Tag-16-Markierung.
+- SHA-256-Vergleich bestätigt unveränderte `analysis/health_monitor.py` und
+  `data/demo.py`. Keine neuen Abhängigkeiten.
+- AppTest prüft die Streamlit-Ausführung, nicht Bildschirmgeometrie, Farben oder
+  Plotly-Mausinteraktionen. Eine visuelle Browserprüfung war hier nicht verfügbar;
+  insbesondere die Darstellung auf dem Präsentationsbildschirm ist noch manuell
+  zu prüfen. Die kompakte Anordnung ist implementiert, ihre genaue Höhe hängt von
+  Bildschirm, Zoom und Fensterbreite ab.

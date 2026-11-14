@@ -43,4 +43,3 @@ def analyze_heart_rate(
         "status": status
     }
 
-print(analyze_heart_rate(80, 60))
