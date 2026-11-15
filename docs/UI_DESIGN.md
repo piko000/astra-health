@@ -1,5 +1,10 @@
 # ASTRA Health — UI design and validation
 
+M5 addition (15 November 2026): the NASA research view now has a separate measured
+serum-biomarker scatter plot and missing-value table. Its categorical sampling
+axis and participant symbols are independent of the synthetic charts and demo
+alert colors/rules. See [OSD575.md](OSD575.md) for provenance and validation.
+
 As of 14 November 2026. A local hackathon prototype, not certified mission software.
 
 ## Baseline review and implementation priorities

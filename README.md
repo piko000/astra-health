@@ -1,8 +1,9 @@
 # ASTRA Health
 
 A local Streamlit prototype for the NASA Space Apps Hackathon 2026.
-All vital signs belong to **fictional astronaut Alex Vega** and are **synthetic**.
-No real NASA measurements, medical diagnosis or NASA certification is claimed.
+The monitoring dashboard uses **synthetic** vital signs for fictional astronaut
+Alex Vega. A separate **NASA Research Data** view explores verified OSD-575 serum
+measurements. No medical diagnosis or NASA certification is claimed.
 
 ## Start (Python 3.13, PowerShell)
 
@@ -50,6 +51,10 @@ states, and no values are silently repaired or invented.
 - `app.py`: interface, navigation, metrics and explanations.
 - `data/demo.py`: `VitalDataSource` protocol and deterministic generator using
   local `Random(2026)`; identical inputs produce identical values.
+- `data/nasa_loader.py`: offline validated OSD-575 research adapter, independent
+  of the synthetic data protocol and demo alert logic.
+- `data/download_nasa.py`: explicit, reproducible NASA download with version/hash checks.
+- `ui/nasa_research.py`: biomarker selection, research scatter plot and missing-value table.
 - `analysis/health_monitor.py`: original analysis calculations and thresholds.
 - `analysis/dashboard.py`: analysis integration and Plotly charts.
 - `analysis/briefing.py`: fixed explanation templates; no additional clinical rules.
@@ -73,9 +78,12 @@ assessment. Only display values are rounded.
 
 ## Scientific foundation and data provenance
 
-Under **View → NASA research**, the Space Health Research view provides sourced
-context and an expandable [research dossier](docs/RESEARCH_SOURCES.md). It reads
-local documentation and works offline; opening external links requires internet.
+Under **View → NASA research**, select a serum biomarker from **OSD-575 version 3**:
+Glucose, Albumin, Creatinine, Sodium, Potassium or Total bilirubin.
+Dataset DOI: [10.26030/mc5d-p710](https://doi.org/10.26030/mc5d-p710), CC0-1.0.
+See the [official study](https://osdr.nasa.gov/bio/repo/data/studies/OSD-575).
+The view also provides context and an expandable [research dossier](docs/RESEARCH_SOURCES.md).
+It reads local measurements and documentation and works offline; external links require internet.
 Missing or unreadable documentation produces an error without disabling the demo.
 
 The [NASA Human Research Program](https://www.nasa.gov/hrp/) supplies research
@@ -83,18 +91,38 @@ context. [NTRS 20220014774](https://ntrs.nasa.gov/citations/20220014774) describ
 the relevance of sampling intervals in sleep measurement. These sources do not
 validate our alert rules or synthetic trajectories.
 
-**No real measurement data was imported.** HRP, OSDR, NLSP and the official
-challenge page were investigated. The dossier documents UTMB, OSDR and sleep-data
-candidates, populations, access status, unknown formats/rights and suitability.
-No directly usable, fully verified dataset for this assessment was identified.
-Some portal pages were unreadable in the tool and the challenge page returned
-HTTP 502. This does not establish that suitable NASA data is unavailable.
+**M5 imports real CMP measurements** from
+`LSDS-8_Comprehensive_Metabolic_Panel_CMP_TRANSFORMED.csv` and joins the NASA ISA
+sample metadata. There are 28 sample rows, four participants and seven sampling
+occasions, including R+194. Six biomarker columns are exposed with unchanged units.
+Total bilirubin has one missing value, displayed explicitly rather than imputed.
+Points represent discrete occasions on a categorical axis, not continuous days.
+No research measurements are passed to demo alert functions.
+
+See [docs/OSD575.md](docs/OSD575.md) for verified files, hashes, provenance,
+metadata discrepancies and limitations. The existing user-provided SUBMITTED
+CSV is preserved but not used by the app. Only the requested TRANSFORMED file
+and verified metadata supply research charts.
+
+OSD-575 was **not confirmed** on the official Challenge Resources list: access
+failed, including HTTPS certificate verification errors on 15 November 2026.
 
 Peak/exercise heart rate and animal data must not be substituted for human resting
 heart rate. Research summaries are not individual mission trajectories. Medical
 effectiveness, sensitivity and specificity are unknown.
 
-## Future data integration
+## Restoring research files and future telemetry integration
+
+Verified research files are included in `data/nasa/OSD-575/`. To restore them:
+
+```powershell
+.\.venv\Scripts\python.exe -m data.download_nasa
+```
+
+Only this explicit download needs internet. The app starts without network access;
+missing/corrupt NASA files produce a research-view message while the demo remains
+usable. The downloader refuses changed versions/checksums; it uses no replacement
+file or third-party mirror. NASA's own S3 redirects are documented in the manifest.
 
 A future adapter may implement `VitalDataSource.load()` and replace the instance
 in `app.py`. Verify the actual source, rights, UI attribution, schema, units,
@@ -112,8 +140,8 @@ are unchanged. Exception messages are now English; exception types are unchanged
 
 ## External resources and AI disclosure
 
-All demo measurements are generated locally. No external images, font files,
-datasets or NASA assets are embedded. Software resources:
+All demo telemetry is generated locally. The research view uses the NASA files
+documented above. No external images or font files are embedded. Software resources:
 
 - [Python](https://www.python.org/): runtime and standard library (`random`).
 - [Streamlit](https://streamlit.io/): local UI and AppTest.
@@ -148,6 +176,7 @@ Recorded runs on 14 November 2026, Python 3.13.16:
 | Axis correction | 76 passed in 10.24s |
 | Interface text cleanup | 76 passed in 10.10s |
 | English translation | 76 passed in 9.87s |
+| M5 NASA research integration (15 November 2026) | 99 passed in 11.99s |
 
 During research-view development, one initial assertion failed because Streamlit
 removed a trailing newline; the test now normalizes outer whitespace. During
@@ -168,12 +197,21 @@ but geometry, focus behavior, screen readers and overflow need manual checks.
 
 ## Suggested demonstration
 
+M5 validation used `.\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider`.
+The starting repository had 76 passing tests (including the earlier 37), all
+retained. Two research-view assertions were updated to expect real NASA data and
+one chart. Twenty-three new cases cover file integrity, metadata, units, missing
+values, chart/source equality, offline UI, failed loads and rejected downloads.
+Core analysis, synthetic generator and demo briefing files have no M5 changes.
+No browser/screenshot validation was performed.
+
 1. Normal scenario, day 30: explain NORMAL and the three indicators.
 2. Anomalous scenario, day 16: show the artificial change marker.
 3. Day 22: explain WARNING, affected indicators and the briefing.
 4. Day 30: show CRITICAL as a demo level, not a diagnosis.
 5. Open Space Health Research and disclose sources and AI assistance.
 
-For submission, describe the project as a **prototype with synthetic vital signs
-and sourced NASA research context**. Real data integration remains future work
-after source, rights and protocol verification.
+For submission, describe it as a **synthetic monitoring prototype with a separate
+explorer of verified NASA OSD-575 serum measurements**. NASA Research Data,
+Synthetic Mission Telemetry and Demo Alert Rules are distinct; no daily NASA
+heart-rate telemetry or clinical validation is claimed.

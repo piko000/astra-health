@@ -1,5 +1,30 @@
 # NASA research and data provenance
 
+## Current status — M5, 15 November 2026
+
+**Real NASA research data is now integrated separately from the synthetic demo.**
+OSD-575 version 3, DOI [10.26030/mc5d-p710](https://doi.org/10.26030/mc5d-p710),
+CC0-1.0: verified transformed CMP measurements and ISA sample metadata were
+downloaded through [NASA's official study](https://osdr.nasa.gov/bio/repo/data/studies/OSD-575).
+Six serum biomarkers are available for four participants at L-92, L-44, L-3,
+R+1, R+45, R+82 and R+194. These are research observations, **not medical**
+diagnoses and not daily heart-rate telemetry. Demo thresholds are never applied.
+
+NASA Research Data, Synthetic Mission Telemetry and Demo Alert Rules are separate.
+The dashboard's original heart rate, sleep and activity remain synthetic.
+OSD-575's inclusion in the official challenge Resources list remains unconfirmed
+because the page could not be fetched successfully.
+
+See [OSD575.md](OSD575.md) for exact columns, units, metadata mapping, file hashes,
+download routes, missing values, access errors and reproduction instructions.
+
+## Historical M4 review — superseded where M5 is noted above
+
+The remainder records the earlier research-only stage on 14 November 2026.
+Statements about no imported datasets or no downloads describe **M4 only**.
+The data gap for daily astronaut telemetry remains; the separate CMP integration
+does not fill that gap.
+
 Research checked on **14 November 2026**. This locally stored view contains
 sources and project interpretations, not imported vital-sign measurements.
 

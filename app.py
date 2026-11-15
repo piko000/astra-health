@@ -11,6 +11,7 @@ from analysis.briefing import mission_briefing
 from data.demo import METRICS, SCENARIOS, SyntheticDataSource, VitalDataSource
 from ui.theme import stylesheet, STATUS_COLORS
 from ui.presentation import data_state, daily_trend, status_period
+from ui.nasa_research import show_nasa_measurements
 
 
 RESEARCH_PATH = Path(__file__).resolve().parent / "docs" / "RESEARCH_SOURCES.md"
@@ -18,9 +19,8 @@ RESEARCH_PATH = Path(__file__).resolve().parent / "docs" / "RESEARCH_SOURCES.md"
 
 def show_research():
     """Local, sourced information view without network requests or measurement imports."""
-    st.info("Research information · No real vital-sign data integration. "
-            "All dashboard vital signs remain synthetic.")
     st.subheader("Space Health Research")
+    show_nasa_measurements()
     st.caption("Research source: [NASA HRP](https://www.nasa.gov/hrp/) studies "
                "health and performance in space and analog environments.")
     st.caption("Research source: [NTRS 20220014774](https://ntrs.nasa.gov/citations/20220014774) "
@@ -41,12 +41,12 @@ def main():
     st.set_page_config(page_title="ASTRA Health", page_icon="🚀", layout="wide")
     st.html(stylesheet())
     st.title("ASTRA Health")
-    st.caption("Mission ASTRA-DEMO · Alex Vega (fictional)")
     view = st.sidebar.radio("View", ("Demo dashboard", "NASA research"))
     if view == "NASA research":
         show_research()
         return
-    st.info("SYNTHETIC DEMO DATA · No real NASA measurements or medical diagnosis.")
+    st.caption("Mission ASTRA-DEMO · Alex Vega (fictional)")
+    st.info("SYNTHETIC DEMO DATA · Synthetic Mission Telemetry · No real NASA measurements or medical diagnosis.")
     st.sidebar.header("Explore mission")
     scenario = st.sidebar.selectbox("Mission scenario", SCENARIOS)
     day = st.sidebar.slider("Assessment day", 1, 30, 30)

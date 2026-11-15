@@ -11,9 +11,10 @@ def test_research_view_separates_evidence_from_demo_data():
     app = AppTest.from_file(str(ROOT / "app.py")).run()
     app.radio[0].set_value("NASA research").run()
     assert not app.exception
-    assert "No real vital-sign data integration" in app.info[0].value
+    assert "NASA Research Data" in app.info[0].value
+    assert "OSD-575" in app.info[0].value
     assert len(app.metric) == 0
-    assert len(app.get("plotly_chart")) == 0
+    assert len(app.get("plotly_chart")) == 1
     content = "\n".join(item.value for item in app.markdown)
     assert content.strip() == (ROOT / "docs" / "RESEARCH_SOURCES.md").read_text(encoding="utf-8").strip()
     assert "https://ntrs.nasa.gov/citations/20220014774" in content

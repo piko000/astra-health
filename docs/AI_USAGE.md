@@ -46,3 +46,12 @@ test expectations and documentation for international submission. Scenario names
 and summary-table labels were translated consistently. Calculations, thresholds,
 raw data keys and synthetic values were preserved. Translation does not constitute
 an independent scientific or medical review.
+
+## M5 research integration
+
+Codex verified public NASA download routes and metadata, implemented the offline
+CMP adapter and research view, and added validation tests/documentation. The
+research measurements are downloaded NASA data, not AI-generated values.
+The original submitted CSV and inspection script supplied by the user were not
+modified or used as unverified substitutes. Challenge Resources inclusion remains
+unconfirmed; no clinical review or statistical inference is claimed.

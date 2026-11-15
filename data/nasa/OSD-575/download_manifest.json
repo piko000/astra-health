@@ -1,0 +1,24 @@
+{
+  "study": "OSD-575",
+  "retrieved_at_utc": "2026-11-15T17:28:49.405312+00:00",
+  "catalog_url": "https://osdr.nasa.gov/osdr/data/osd/files/575/",
+  "study_version": 3,
+  "metadata_url": "https://osdr.nasa.gov/osdr/data/osd/meta/575",
+  "metadata_sha256": "645a0c6693a96cfee62f3af4bc7b4e55365d0eaa8d8756d1d606b2f78f83058c",
+  "files": [
+    {
+      "name": "LSDS-8_Comprehensive_Metabolic_Panel_CMP_TRANSFORMED.csv",
+      "url": "https://osdr.nasa.gov/geode-py/ws/studies/OSD-575/download?source=datamanager&file=LSDS-8_Comprehensive_Metabolic_Panel_CMP_TRANSFORMED.csv",
+      "bytes": 8506,
+      "sha256": "5eb1e7f025dd8443a9e70111e62bc32afae3432753024489c5c013e401d709d9",
+      "resolved_url": "https://genelab-alsda-repo-prod.s3.amazonaws.com/alsda-data/LSDS-8/Comprehensive_Metabolic_Panel/LSDS-8_Comprehensive_Metabolic_Panel_CMP_TRANSFORMED.csv"
+    },
+    {
+      "name": "OSD-575_metadata_OSD-575-ISA.zip",
+      "url": "https://osdr.nasa.gov/geode-py/ws/studies/OSD-575/download?source=datamanager&file=OSD-575_metadata_OSD-575-ISA.zip",
+      "bytes": 71702,
+      "sha256": "a1d3e49e2b61ab427a8760d0c98e0324a53272d0e1314632290266b014476f1d",
+      "resolved_url": "https://genelab-shared-repo-prod.s3.amazonaws.com/osd-data/OSD-575/metadata/OSD-575_metadata_OSD-575-ISA.zip"
+    }
+  ]
+}
